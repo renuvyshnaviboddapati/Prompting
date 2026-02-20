@@ -2,6 +2,11 @@
 import PyPDF2
 import google.generativeai as genai
 import json
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Import DB helpers
 from db import create_main_table, store_report
@@ -23,7 +28,10 @@ resume_text = extract_text_from_pdf(resume_path)
 jd_text = extract_text_from_pdf(jd_path)
 
 # Configure Gemini API
-genai.configure(api_key="AIzaSyCx9fh8GnS3uKvmOGoXNKLIu0EZX-Z58p0")
+api_key = os.getenv("API_KEY")
+if not api_key:
+    raise ValueError("API_KEY not found in .env file")
+genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 # ----- Analysis Prompt -----
